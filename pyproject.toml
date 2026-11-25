@@ -1,0 +1,36 @@
+# Build system configuration so pip can install the package in editable mode (-e)
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taskforge"
+version = "0.1.0"
+description = "Distributed Background Job Queue & Worker Engine"
+requires-python = ">=3.12"
+
+# Core runtime dependencies
+dependencies = [
+    "redis>=5.0.0",             # Async Redis client for queues, leases, and Lua scripts
+    "psycopg[binary]>=3.2.0",   # PostgreSQL driver for durable job audit logs & idempotency
+    "fastapi>=0.115.0",         # REST API for enqueueing jobs and inspecting/replaying DLQ
+    "uvicorn>=0.32.0",          # ASGI server to run FastAPI
+    "pydantic>=2.9.0",          # Strict schema validation for job payloads
+]
+
+# Development and testing dependencies (installed via `pip install -e ".[dev]"`)
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",            # Test runner
+    "pytest-asyncio>=0.24.0",   # Supports `async def` tests for workers and Redis
+    "httpx>=0.27.0",            # Async HTTP client for testing FastAPI endpoints
+]
+
+# Tell setuptools to look inside the `src/` directory for the `taskforge` package
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Configure pytest to automatically handle async tests inside the `tests/` folder
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

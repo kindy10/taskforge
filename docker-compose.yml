@@ -1,0 +1,23 @@
+services:
+  # Fast in-memory store for the ready queue, delayed jobs, and worker lease timers
+  redis:
+    image: redis:7-alpine
+    container_name: taskforge_redis
+    ports:
+      - "6379:6379"
+    # Enable Append-Only File (AOF) persistence so queued jobs survive a Redis restart
+    command: redis-server --appendonly yes
+
+  # Durable relational database for job payloads, retry history, and idempotency checks
+  postgres:
+    image: postgres:16-alpine
+    container_name: taskforge_postgres
+    environment:
+      POSTGRES_USER: taskforge
+      POSTGRES_PASSWORD: taskforge_dev
+      POSTGRES_DB: taskforge
+    ports:
+      - "5432:5432"
+    volumes:
+      # Automatically runs our SQL schema the first time the container initializes
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
