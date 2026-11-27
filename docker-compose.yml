@@ -1,7 +1,7 @@
 services:
   # Fast in-memory store for the ready queue, delayed jobs, and worker lease timers
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine   # Start a container using the already existing image redis:7
     container_name: taskforge_redis
     ports:
       - "6379:6379"
@@ -10,7 +10,7 @@ services:
 
   # Durable relational database for job payloads, retry history, and idempotency checks
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16-alpine   # Start a container using the already existing image postgresSQL
     container_name: taskforge_postgres
     environment:
       POSTGRES_USER: taskforge
@@ -21,3 +21,5 @@ services:
     volumes:
       # Automatically runs our SQL schema the first time the container initializes
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+#a container is like a process while an image is like a program
