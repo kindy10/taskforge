@@ -7,6 +7,7 @@ import redis.asyncio as redis
 from typing import Any
 from taskforge.config import POSTGRES_DSN, REDIS_URL
 from psycopg.types.json import Jsonb
+
 class QueueClient:
     """
      Producer SDK for submitting background jobs to TaskForge.
